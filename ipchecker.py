@@ -1,33 +1,32 @@
-import sys
+import argparse
 import requests
 
-def hello(a,b):
-    print("hello and thats your sum: ", a+b)
+parser = argparse.ArgumentParser(
+    prog='ipchecker', 
+    usage="python ipchecker.py IPADDR", 
+    description="Check if IP address is malicious or not", 
+    conflict_handler='error', 
+    add_help=True
+)
 
-if __name__ == "__main__":
-    a = int(sys.argv[1])
-    b = int(sys.argv[2])
-    hello(a,b)
+parser.add_argument("IPADDR",  help="The IP address you want to scan with Virus Total")
+args = parser.parse_args()
+
+
+print(args.IPADDR)
+
+def scan_ip(IP):
+    url = "https://www.virustotal.com/api/v3/ip_addresses/" + IP
+    return url    
+
+targetIP = scan_ip(args.IPADDR)
 
 headers = {
     "accept" : "application/json",
     "x-apikey" : "<APIKEY>"
 }
 
+response = requests.get(targetIP, headers=headers)
 
+print(response.text)
 
-    
-
-""" IPLIST = ['10.10.10.10','22.2.2.2']
-text = input("Enter IP address: ")
-print(text)
-
-def make_urls():
-    URLS = []
-    for ip in IPLIST:
-        url = "https://www.virustotal.com/api/v3/ip_addresses/" + ip
-        URLS.append(url)
-    return URLS    
-
-URLLIST = make_urls()
-print(URLLIST) """
